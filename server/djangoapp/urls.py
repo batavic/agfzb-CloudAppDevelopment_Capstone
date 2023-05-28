@@ -2,6 +2,7 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 from djangoapp.views import about
+from djangoapp.views import contact
 from . import views
 
 app_name = 'djangoapp'
@@ -14,6 +15,7 @@ urlpatterns = [
     path('about/', about, name='about'),
 
     # path for contact us view
+    path('contact/', contact, name='contact'),
 
     # path for registration
 
