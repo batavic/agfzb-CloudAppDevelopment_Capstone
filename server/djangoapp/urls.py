@@ -3,6 +3,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 from djangoapp.views import about
 from djangoapp.views import contact
+from djangoapp.views import login_request
+from djangoapp.views import logout_request
 from . import views
 
 app_name = 'djangoapp'
@@ -20,8 +22,11 @@ urlpatterns = [
     # path for registration
 
     # path for login
+    path('login/', login_request, name='login'),
 
     # path for logout
+    path('logout/', logout_request, name='logout'),
+
 
     path(route='', view=views.get_dealerships, name='index'),
 
