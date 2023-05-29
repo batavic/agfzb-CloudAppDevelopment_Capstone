@@ -5,6 +5,7 @@ from djangoapp.views import about
 from djangoapp.views import contact
 from djangoapp.views import login_request
 from djangoapp.views import logout_request
+from djangoapp.views import registration_request
 from . import views
 
 app_name = 'djangoapp'
@@ -20,6 +21,7 @@ urlpatterns = [
     path('contact/', contact, name='contact'),
 
     # path for registration
+    path('registration/', registration_request, name='registration'),
 
     # path for login
     path('login/', login_request, name='login'),
