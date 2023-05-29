@@ -40,7 +40,8 @@
            <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
            <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
            <button class="btn btn-primary my-2 my-sm-0 mr-2" type="submit">Login</button>
-           <button class="btn btn-link my-2 my-sm-0">Sign Up</button>
+           <a class="btn btn-link my-2 my-sm-0" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+           
          </form>
            {% endif %}
        </div>
