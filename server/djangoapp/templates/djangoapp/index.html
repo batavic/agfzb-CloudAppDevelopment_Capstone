@@ -33,14 +33,14 @@
          {% if user.is_authenticated %}
          <div class="ml-auto">
            <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
-           <a class="btn btn-link">Logout</a>
+           <button class="btn btn-link my-2 my-sm-0">Logout</button>
          </div>
          {% else %}
          <form class="form-inline ml-auto">
            <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
            <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
            <button class="btn btn-primary my-2 my-sm-0 mr-2" type="submit">Login</button>
-           <a class="btn btn-secondary my-2 my-sm-0">Sign Up</a>
+           <button class="btn btn-link my-2 my-sm-0">Sign Up</button>
          </form>
            {% endif %}
        </div>
