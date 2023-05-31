@@ -3,12 +3,16 @@ import json
 from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
-def get_request(url, **kwargs):
-    print(kwargs)
+def get_request(url, params=None, auth=None):
+    print(params)
     print("GET from {} ".format(url))
     try:
-        # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'}, params=kwargs)
+        if auth:
+            # Call get method of requests library with URL, parameters, and authentication
+            response = requests.get(url, headers={'Content-Type': 'application/json'}, params=params, auth=auth)
+        else:
+            # Call get method of requests library with URL and parameters
+            response = requests.get(url, headers={'Content-Type': 'application/json'}, params=params)
         status_code = response.status_code
         print("With status {} ".format(status_code))
         json_data = json.loads(response.text)
@@ -69,15 +73,37 @@ def get_dealer_reviews_from_cf(url, dealer_id):
                 sentiment=None,
                 id=item.get("id")
             )
+            dealer_obj.sentiment=analyze_review_sentiments(dealer_obj.review)
             results.append(dealer_obj)
     
     return results
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
-# - Call get_request() with specified arguments
-# - Get the returned sentiment label such as Positive or Negative
+def analyze_review_sentiments(review_text):
+    url = "https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/320d07ea-d8a1-421a-ba00-39b425796684"
+    api_key = "TGUaus6MkkIJcYB33p0SgedRDG4Mg9eSGH7k59zltxim"
+    
+    if api_key:
+        # Authentication parameters
+        auth = HTTPBasicAuth('apikey', api_key)
+        
+        # NLU parameters
+        params = {
+            "text": review_text,
+            "version": "2021-09-01",
+            "features": "sentiment",
+            "return_analyzed_text": True
+        }
+        
+        # Make a request to analyze the sentiment of the review
+        response = get_request(url, params=params, auth=auth)
+        
+        if response:
+            sentiment = response.get("sentiment", {}).get("document", {}).get("label")
+            return sentiment
+    
+    return None
 
 
 
