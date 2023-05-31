@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import CarMake, CarModel, CarModel
-from .restapis import get_dealers_from_cf, get_request, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_request, get_dealer_reviews_from_cf, analyze_review_sentiments
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -74,9 +74,18 @@ def get_dealer_details(request, dealer_id):
     if request.method == 'GET':
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/d714be82-5315-4975-bb14-898b8ff9635e/dealership-package/get-review"
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
-        # Concatenate all review texts
-        review_texts = ' '.join([review.review for review in reviews])
-        return HttpResponse(review_texts)
+        
+        # Analyze sentiment for each review
+        for review in reviews:
+            review.sentiment = analyze_review_sentiments(review.review)
+        
+        # Prepare the response string with reviews and sentiment
+        response = ''
+        for review in reviews:
+            response += f"Review: {review.review}<br>"
+            response += f"Sentiment: {review.sentiment}<br><br>"
+        
+        return HttpResponse(response)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
