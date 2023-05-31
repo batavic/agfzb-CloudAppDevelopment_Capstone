@@ -7,6 +7,7 @@ from djangoapp.views import login_request
 from djangoapp.views import logout_request
 from djangoapp.views import registration_request
 from djangoapp.views import get_dealerships
+from djangoapp.views import get_dealer_details
 from . import views
 
 app_name = 'djangoapp'
@@ -30,10 +31,11 @@ urlpatterns = [
     # path for logout
     path('logout/', logout_request, name='logout'),
 
-
-    path('', views.get_dealerships, name='index'),
+    #index path
+    path('', get_dealerships, name='index'),
 
     # path for dealer reviews view
+    path('dealer/<int:dealer_id>/', get_dealer_details, name='dealer_details'),
 
     # path for add a review view
 
