@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .models import CarMake, CarModel, CarModel
 from .restapis import get_dealers_from_cf, get_request, get_dealer_reviews_from_cf, analyze_review_sentiments
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import datetime
 import logging
@@ -88,6 +89,30 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(response)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+@login_required(login_url='/login')
+def add_review(request, dealer_id):
+    if request.method == 'POST':
+        url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/d714be82-5315-4975-bb14-898b8ff9635e/dealership-package/post-review"
+
+        review = {
+            "time": datetime.utcnow().isoformat(),
+            "name": request.user.username,
+            "dealership": dealer_id,
+            "review": request.POST.get('review'),
+            "purchase": request.POST.get('purchase')
+        }
+
+        json_payload = {
+            "review": review
+        }
+
+        response = post_request(url, json_payload, dealerId=dealer_id)
+
+        if response:
+            return HttpResponse(f"Review posted successfully. Review ID: {response['id']}")
+        else:
+            return HttpResponse("Failed to post review.")
+    else:
+        return HttpResponse("Invalid request method.")
+    
 
