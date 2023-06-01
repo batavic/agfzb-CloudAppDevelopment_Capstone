@@ -81,39 +81,41 @@ def get_dealer_details(request, dealer_id):
 
         return render(request, 'djangoapp/dealer_details.html', context)
         
-        # Analyze sentiment for each review
-        #for review in reviews:
-        #   review.sentiment = analyze_review_sentiments(review.review)
-        
        
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
-    url = "https://<review_post_function_url>"
-
+    print("The dealer id is: " + str(dealer_id))
+    if request.method == "GET":
+        cars = CarModel.objects.filter(dealer_id=dealer_id)
+        context = {'cars': cars}
+        return render(request, 'djangoapp/add_review.html', context)
+        
+    url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/d714be82-5315-4975-bb14-898b8ff9635e/dealership-package/post-review"
+        
+"""
     if request.method == "POST":
         if request.user.is_authenticated:
             review = {
                 "time": datetime.utcnow().isoformat(),
                 "name": request.user.username,
                 "dealership": dealer_id,
-                "review": request.POST.get("review"),
-                "purchase": request.POST.get("purchase")
+                "review": request.POST.get("content"),
+                "purchase": request.POST.get("purchasecheck")
             }
 
             json_payload = {
                 "review": review
             }
 
-            response = post_request(url, json_payload, dealerId=dealer_id)
+            response = post_request(url, json_payload, dealer_id)
 
             if response:
-                return HttpResponse(f"Review posted successfully. Review ID: {response['id']}")
+                return redirect("djangoapp:dealer_details", dealer_id)
             else:
                 return HttpResponse("Failed to post review.")
-        else:
-            return HttpResponse("Authentication required to add a review.")
-    else:
-        return HttpResponse("Invalid request method.")
+"""
     
+
+        
 
