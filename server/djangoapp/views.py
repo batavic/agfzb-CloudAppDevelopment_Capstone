@@ -75,7 +75,8 @@ def get_dealer_details(request, dealer_id):
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/d714be82-5315-4975-bb14-898b8ff9635e/dealership-package/get-review"
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         context={
-            "reviews":reviews
+            "reviews":reviews,
+            "dealer_id":dealer_id
         }
 
         return render(request, 'djangoapp/dealer_details.html', context)
