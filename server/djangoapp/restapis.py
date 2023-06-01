@@ -25,6 +25,20 @@ def get_request(url, params=None, auth=None):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
+def post_request(url, json_payload, **kwargs):
+    print(json_payload)
+    print("POST to {} ".format(url))
+    try:
+        response = requests.post(url, headers={'Content-Type': 'application/json'}, params=kwargs, json=json_payload)
+        status_code = response.status_code
+        print("With status {} ".format(status_code))
+        json_data = json.loads(response.text)
+        return json_data
+    except:
+        print("Network exception occurred")
+        return None
+    
+
 
 def get_dealers_from_cf(url, **kwargs):
     results = []
@@ -74,6 +88,7 @@ def get_dealer_reviews_from_cf(url, dealer_id):
                 id=item.get("id")
             )
             dealer_obj.sentiment=analyze_review_sentiments(dealer_obj.review)
+            print("The sentiment is: " + str(analyze_review_sentiments(dealer_obj.review)))
             results.append(dealer_obj)
     
     return results
@@ -81,7 +96,7 @@ def get_dealer_reviews_from_cf(url, dealer_id):
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 def analyze_review_sentiments(review_text):
-    url = "https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/320d07ea-d8a1-421a-ba00-39b425796684"
+    url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com"
     api_key = "TGUaus6MkkIJcYB33p0SgedRDG4Mg9eSGH7k59zltxim"
     
     if api_key:
