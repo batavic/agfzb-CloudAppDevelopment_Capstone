@@ -89,29 +89,31 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(response)
 
 # Create a `add_review` view to submit a review
-@login_required(login_url='/login')
 def add_review(request, dealer_id):
-    if request.method == 'POST':
-        url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/d714be82-5315-4975-bb14-898b8ff9635e/dealership-package/post-review"
+    url = "https://<review_post_function_url>"
 
-        review = {
-            "time": datetime.utcnow().isoformat(),
-            "name": request.user.username,
-            "dealership": dealer_id,
-            "review": request.POST.get('review'),
-            "purchase": request.POST.get('purchase')
-        }
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            review = {
+                "time": datetime.utcnow().isoformat(),
+                "name": request.user.username,
+                "dealership": dealer_id,
+                "review": request.POST.get("review"),
+                "purchase": request.POST.get("purchase")
+            }
 
-        json_payload = {
-            "review": review
-        }
+            json_payload = {
+                "review": review
+            }
 
-        response = post_request(url, json_payload, dealerId=dealer_id)
+            response = post_request(url, json_payload, dealerId=dealer_id)
 
-        if response:
-            return HttpResponse(f"Review posted successfully. Review ID: {response['id']}")
+            if response:
+                return HttpResponse(f"Review posted successfully. Review ID: {response['id']}")
+            else:
+                return HttpResponse("Failed to post review.")
         else:
-            return HttpResponse("Failed to post review.")
+            return HttpResponse("Authentication required to add a review.")
     else:
         return HttpResponse("Invalid request method.")
     
