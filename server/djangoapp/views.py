@@ -67,7 +67,6 @@ def get_dealerships(request):
         context={
             'dealership_list':dealerships
         }
-
         return render(request, 'djangoapp/index.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
@@ -75,18 +74,17 @@ def get_dealer_details(request, dealer_id):
     if request.method == 'GET':
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/d714be82-5315-4975-bb14-898b8ff9635e/dealership-package/get-review"
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
+        context={
+            "reviews":reviews
+        }
+
+        return render(request, 'djangoapp/dealer_details.html', context)
         
         # Analyze sentiment for each review
-        for review in reviews:
-            review.sentiment = analyze_review_sentiments(review.review)
+        #for review in reviews:
+        #   review.sentiment = analyze_review_sentiments(review.review)
         
-        # Prepare the response string with reviews and sentiment
-        response = ''
-        for review in reviews:
-            response += f"Review: {review.review}<br>"
-            response += f"Sentiment: {review.sentiment}<br><br>"
-        
-        return HttpResponse(response)
+       
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
