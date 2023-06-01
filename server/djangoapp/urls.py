@@ -8,6 +8,7 @@ from djangoapp.views import logout_request
 from djangoapp.views import registration_request
 from djangoapp.views import get_dealerships
 from djangoapp.views import get_dealer_details
+from djangoapp.views import add_review
 from . import views
 
 app_name = 'djangoapp'
@@ -38,5 +39,6 @@ urlpatterns = [
     path('dealer/<int:dealer_id>/', get_dealer_details, name='dealer_details'),
 
     # path for add a review view
+    path('dealer/<int:dealer_id>/add_review/', add_review, name='add_review'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
